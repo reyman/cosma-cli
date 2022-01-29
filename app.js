@@ -29,10 +29,24 @@ For more information:
 program
     .command('config')
     .alias('c')
+    .argument('<path>', 'Path to YAML config file.')
     .description('Generate the configuration file.')
+    .action((path) => {
+        require('./functions/config')(path);
+    })
+
+program
+    .command('list')
+    .alias('l')
+    .description('Get the list of records repositories.')
     .action(() => {
-        const Config = require('./core/models/config');
-        new Config();
+        const Repositories = require('./core/models/repositories');
+        const repositories = new Repositories();
+        // repositories.add('toto', '/Users/guillaume/Documents/cosma', { 'files_origin': '/Users/guillaume/Documents/cosma' });
+        // repositories.save();
+        // console.log(repositories.get('toto'));
+        // const list = Repositories().get();
+        // console.log(list);
     })
 
 program
