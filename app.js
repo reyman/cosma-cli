@@ -6,7 +6,8 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
-const commander = require('commander')
+const columnify = require('columnify')
+    , commander = require('commander')
     , program = new commander.Command()
     , { version } = require('./package.json');
 
@@ -40,14 +41,15 @@ program
     .command('list')
     .alias('l')
     .description('Get the list of records repositories.')
-    .action(() => {
+    .option('-p, --path', 'Display config file path.')
+    .action((options) => {
         const Repositories = require('./core/models/repositories');
-        const repositories = new Repositories();
-        // repositories.add('tota', 'C:/Users/login/Desktop/confg.yml', { 'files_origin': 'D:/Boite a fiches/' });
-        // repositories.save();
-        console.log(repositories.get('tot'));
-        // const list = Repositories().get();
-        // console.log(list);
+        const list = new Repositories().list.map((record) => {
+            delete record.opts
+            return record;
+        })
+        var columns = columnify(list, { showHeaders: false, columnSplitter: '\t' })
+        console.log(`\n${columns}\n`);
     })
 
 program
