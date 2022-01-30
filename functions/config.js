@@ -8,9 +8,10 @@ const fs = require('fs')
     , path = require('path')
     , yml = require('js-yaml');
 
-const Config = require('../core/models/config');
+const Config = require('../core/models/config')
+    , Repositories = require('../core/models/repositories');
 
-module.exports = function (filePath) {
+module.exports = function (name, filePath) {
     if (fs.existsSync(filePath) === false) {
         return console.error('\x1b[31m', 'Err.', '\x1b[0m', 'Config file do not exist.'); }
 
@@ -21,9 +22,18 @@ module.exports = function (filePath) {
         if (['.yml', '.yaml'].includes(path.extname(filePath)) === false) {
             return console.error('\x1b[31m', 'Err.', '\x1b[0m', 'Config file must be YAML.'); }
 
-        data = yml.load(data);
+        const opts = yml.load(data);
 
-        if (new Config(data).isValid() === false) {
+        if (new Config(opts).isValid() === false) {
             return console.error('\x1b[31m', 'Err.', '\x1b[0m', 'Config file is not valid.'); }
+
+        const repositories = new Repositories();
+        repositories.add(name, filePath, opts);
+
+        if (repositories.isValid() === false) {
+            return console.error('\x1b[31m', 'Err.', '\x1b[0m', repositories.writeReport());
+        }
+
+        repositories.save();
     })
 }

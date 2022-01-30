@@ -29,10 +29,11 @@ For more information:
 program
     .command('config')
     .alias('c')
+    .argument('<name>', 'Name of the config.')
     .argument('<path>', 'Path to YAML config file.')
     .description('Generate the configuration file.')
-    .action((path) => {
-        require('./functions/config')(path);
+    .action((name, path) => {
+        require('./functions/config')(name, path);
     })
 
 program
@@ -42,9 +43,9 @@ program
     .action(() => {
         const Repositories = require('./core/models/repositories');
         const repositories = new Repositories();
-        // repositories.add('toto', '/Users/guillaume/Documents/cosma', { 'files_origin': '/Users/guillaume/Documents/cosma' });
+        // repositories.add('tota', 'C:/Users/login/Desktop/confg.yml', { 'files_origin': 'D:/Boite a fiches/' });
         // repositories.save();
-        // console.log(repositories.get('toto'));
+        console.log(repositories.get('tot'));
         // const list = Repositories().get();
         // console.log(list);
     })
