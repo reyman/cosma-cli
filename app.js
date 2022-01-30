@@ -6,8 +6,7 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
-const columnify = require('columnify')
-    , commander = require('commander')
+const commander = require('commander')
     , program = new commander.Command()
     , { version } = require('./package.json');
 
@@ -30,26 +29,12 @@ For more information:
 program
     .command('config')
     .alias('c')
-    .argument('<name>', 'Name of the config.')
-    .argument('<path>', 'Path to YAML config file.')
+    .argument('<action>', 'list|read|add|update|delete.')
+    .option('-n, --name <name>', 'Display config file path.')
+    .option('-p, --path <path>', 'Display config file path.')
     .description('Generate the configuration file.')
-    .action((name, path) => {
-        require('./functions/config')(name, path);
-    })
-
-program
-    .command('list')
-    .alias('l')
-    .description('Get the list of records repositories.')
-    .option('-p, --path', 'Display config file path.')
-    .action((options) => {
-        const Repositories = require('./core/models/repositories');
-        const list = new Repositories().list.map((record) => {
-            delete record.opts
-            return record;
-        })
-        var columns = columnify(list, { showHeaders: false, columnSplitter: '\t' })
-        console.log(`\n${columns}\n`);
+    .action((action, options) => {
+        require('./functions/config')(action, options);
     })
 
 program
